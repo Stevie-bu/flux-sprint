@@ -65,7 +65,7 @@ function ProjectCard({
         <Image src={src} alt={title} fill className="object-cover" />
         {/* Tags */}
         <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
-          {tags.map((tag) => (
+          {(tags || []).map((tag) => (
             <span
               key={tag}
               className="rounded-[24px] bg-white/30 px-[8px] py-[4px] font-[family-name:var(--font-inter)] text-[14px] font-medium tracking-[-0.56px] text-[#111] backdrop-blur-[10px]"
