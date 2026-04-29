@@ -1,92 +1,111 @@
-export default function Footer() {
+type SocialLink = { label: string; url: string; _key?: string };
+type LegalLink = { label: string; href: string; _key?: string };
+
+type FooterProps = {
+  studioName?: string;
+  footerCta?: string;
+  ctaText?: string;
+  credit?: string;
+  socialLinks?: SocialLink[];
+  legalLinks?: LegalLink[];
+};
+
+const defaultSocials: SocialLink[] = [
+  { label: "Facebook", url: "https://facebook.com", _key: "fb" },
+  { label: "Instagram", url: "https://instagram.com", _key: "ig" },
+  { label: "x.com", url: "https://x.com", _key: "x" },
+  { label: "Linkedin", url: "https://linkedin.com", _key: "li" },
+];
+
+const defaultLegals: LegalLink[] = [
+  { label: "licences", href: "#", _key: "lic" },
+  { label: "Privacy policy", href: "#", _key: "priv" },
+];
+
+export default function Footer({
+  studioName = "H.Studio",
+  footerCta = "Have a project in mind?",
+  ctaText = "Let's talk",
+  credit = "Coded By Claude",
+  socialLinks,
+  legalLinks,
+}: FooterProps) {
+  const socials = socialLinks && socialLinks.length > 0 ? socialLinks : defaultSocials;
+  const legals = legalLinks && legalLinks.length > 0 ? legalLinks : defaultLegals;
+  const mid = Math.ceil(socials.length / 2);
+  const socialsLeft = socials.slice(0, mid);
+  const socialsRight = socials.slice(mid);
+
   return (
     <footer className="w-full overflow-hidden bg-black pt-[48px]">
-      {/* ===== Top area: CTA + social links + divider ===== */}
       <div className="flex flex-col gap-[24px] px-[16px] lg:gap-[48px] lg:px-[32px]">
-        {/* Desktop: 3-column row / Mobile: stacked */}
         <div className="flex flex-col gap-[16px] lg:flex-row lg:items-start lg:justify-between lg:gap-0">
-          {/* CTA */}
           <div className="flex w-[298px] flex-col gap-[12px]">
             <p className="font-[family-name:var(--font-inter)] text-[24px] font-light italic uppercase leading-[1.1] tracking-[-0.96px] text-white">
-              {"Have a "}
-              <span className="font-black not-italic">project</span>
-              {" in mind?"}
+              {footerCta}
             </p>
             <a
               href="#contact"
               className="w-fit rounded-[24px] border border-white px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white"
             >
-              Let&apos;s talk
+              {ctaText}
             </a>
           </div>
 
-          {/* Social links — center on desktop, stacked on mobile */}
+          {/* Social links — left group on desktop center, all stacked on mobile */}
           <div className="flex flex-col gap-[16px] font-[family-name:var(--font-inter)] text-[18px] font-normal uppercase leading-[1.1] tracking-[-0.72px] text-white lg:gap-0 lg:text-center">
-            <p>Facebook</p>
-            <p>Instagram</p>
-            {/* x.com and Linkedin: on mobile below, on desktop in right column */}
-            <p className="lg:hidden">x.com</p>
-            <p className="lg:hidden">Linkedin</p>
+            {socialsLeft.map((s) => (
+              <p key={s._key || s.label}>{s.label}</p>
+            ))}
+            {socialsRight.map((s) => (
+              <p key={s._key || s.label} className="lg:hidden">{s.label}</p>
+            ))}
           </div>
 
-          {/* Social links right column — desktop only */}
+          {/* Right group — desktop only */}
           <div className="hidden font-[family-name:var(--font-inter)] text-[18px] font-normal uppercase leading-[1.1] tracking-[-0.72px] text-white lg:block lg:text-right">
-            <p>x.com</p>
-            <p>Linkedin</p>
+            {socialsRight.map((s) => (
+              <p key={s._key || s.label}>{s.label}</p>
+            ))}
           </div>
         </div>
 
-        {/* Divider */}
         <hr className="w-full border-t border-white/30" />
       </div>
 
-      {/* ===== Bottom area: large H.Studio + legal ===== */}
       {/* Mobile */}
       <div className="flex flex-col items-center gap-[16px] px-[16px] pt-[48px] lg:hidden">
-        {/* Legal links */}
         <div className="flex gap-[34px] pb-[32px] font-[family-name:var(--font-inter)] text-[12px] font-normal uppercase leading-[1.1] tracking-[-0.48px] text-white">
-          <a href="#" className="underline">
-            licences
-          </a>
-          <a href="#" className="underline">
-            Privacy policy
-          </a>
+          {legals.map((l) => (
+            <a key={l._key || l.label} href={l.href} className="underline">{l.label}</a>
+          ))}
         </div>
-
-        {/* Coded by + H.Studio */}
         <div className="flex w-full flex-col gap-[12px]">
           <p className="font-[family-name:var(--font-geist-mono)] text-[10px] font-normal uppercase leading-[1.1] text-white">
-            [ Coded By Claude ]
+            [ {credit} ]
           </p>
           <p className="-mb-[0.15em] font-[family-name:var(--font-inter)] text-[clamp(60px,24vw,91px)] font-semibold capitalize leading-[1] tracking-[-0.06em] text-white">
-            H.Studio
+            {studioName}
           </p>
         </div>
       </div>
 
       {/* Desktop */}
       <div className="hidden items-end justify-between px-[32px] pt-[120px] lg:flex">
-        {/* Large H.Studio with rotated label */}
         <div className="relative" style={{ width: "clamp(600px, 75.9vw, 1093px)" }}>
-          {/* Rotated "Coded By Claude" */}
           <div className="absolute left-0 top-0 flex h-full w-[15px] items-center justify-center">
             <p className="-rotate-90 whitespace-nowrap font-[family-name:var(--font-geist-mono)] text-[14px] font-normal uppercase leading-[1.1] text-white">
-              [ Coded By Claude ]
+              [ {credit} ]
             </p>
           </div>
           <p className="-mb-[0.15em] font-[family-name:var(--font-inter)] text-[clamp(150px,20.14vw,290px)] font-semibold capitalize leading-[1] tracking-[-0.06em] text-white">
-            H.Studio
+            {studioName}
           </p>
         </div>
-
-        {/* Legal links — bottom right */}
         <div className="flex gap-[34px] pb-[32px] font-[family-name:var(--font-inter)] text-[12px] font-normal uppercase leading-[1.1] tracking-[-0.48px] text-white">
-          <a href="#" className="underline">
-            licences
-          </a>
-          <a href="#" className="underline">
-            Privacy policy
-          </a>
+          {legals.map((l) => (
+            <a key={l._key || l.label} href={l.href} className="underline">{l.label}</a>
+          ))}
         </div>
       </div>
     </footer>

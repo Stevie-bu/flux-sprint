@@ -1,18 +1,19 @@
 import Image from "next/image";
+import { urlFor } from "@/sanity/client";
 
-const articles = [
-  {
-    image: "/news-1.png",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    image: "/news-2.png",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    image: "/news-3.png",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
+export type ArticleData = {
+  _id?: string;
+  title?: string;
+  excerpt?: string;
+  image?: unknown;
+  imageSrc?: string;
+  link?: string;
+};
+
+const defaultArticles: ArticleData[] = [
+  { imageSrc: "/news-1.png", excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+  { imageSrc: "/news-2.png", excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+  { imageSrc: "/news-3.png", excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
 ];
 
 function ArrowSmall() {
@@ -34,11 +35,13 @@ function NewsCard({
   text,
   offset = false,
   isLast = false,
+  readMoreLabel = "Read more",
 }: {
   image: string;
   text: string;
   offset?: boolean;
   isLast?: boolean;
+  readMoreLabel?: string;
 }) {
   return (
     <div className="flex shrink-0 items-stretch">
@@ -57,7 +60,7 @@ function NewsCard({
           className="flex w-fit items-center gap-[10px] border-b border-black py-[4px]"
         >
           <span className="font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-black">
-            Read more
+            {readMoreLabel}
           </span>
           <ArrowSmall />
         </a>
@@ -73,22 +76,30 @@ function NewsCard({
   );
 }
 
-export default function News() {
+type NewsProps = {
+  articles?: ArticleData[];
+  heading?: string;
+  readMoreText?: string;
+};
+
+export default function News({ articles: cmsArticles, heading = "Keep up with my latest news & achievements", readMoreText = "Read more" }: NewsProps) {
+  const articles = cmsArticles && cmsArticles.length > 0 ? cmsArticles : defaultArticles;
   return (
     <section className="w-full bg-[#f3f3f3]">
       {/* ===== Mobile ===== */}
       <div className="flex flex-col gap-[32px] px-[16px] py-[64px] lg:hidden">
         <h2 className="font-[family-name:var(--font-inter)] text-[32px] font-light uppercase leading-[0.86] tracking-[-2.56px] text-black">
-          Keep up with my latest news &amp; achievements
+          {heading}
         </h2>
         <div className="flex snap-x snap-mandatory gap-[16px] overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {articles.map((a, i) => (
             <div key={i} className="snap-start">
               <NewsCard
-                image={a.image}
-                text={a.text}
+                image={a.image ? urlFor(a.image).width(706).quality(80).url() : (a.imageSrc || `/news-${i + 1}.png`)}
+                text={a.excerpt || ""}
                 offset={i % 2 === 1}
                 isLast={i === articles.length - 1}
+                readMoreLabel={readMoreText}
               />
             </div>
           ))}
@@ -102,8 +113,9 @@ export default function News() {
           {/* Rotated heading on the left — sticks to left */}
           <div className="flex h-[706px] w-[110px] shrink-0 items-center justify-center">
             <h2 className="-rotate-90 whitespace-nowrap font-[family-name:var(--font-inter)] text-[64px] font-light uppercase leading-[0.86] tracking-[-5.12px] text-black">
-              <span className="block">Keep up with my latest</span>
-              <span className="block">news &amp; achievements</span>
+              {heading.split(/(?<=latest\s)/).map((part, i) => (
+                <span key={i} className="block">{part}</span>
+              ))}
             </h2>
           </div>
 
@@ -112,10 +124,11 @@ export default function News() {
             {articles.map((a, i) => (
               <NewsCard
                 key={i}
-                image={a.image}
-                text={a.text}
+                image={a.image ? urlFor(a.image).width(706).quality(80).url() : (a.imageSrc || `/news-${i + 1}.png`)}
+                text={a.excerpt || ""}
                 offset={i % 2 === 1}
                 isLast={i === articles.length - 1}
+                readMoreLabel={readMoreText}
               />
             ))}
           </div>
