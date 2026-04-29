@@ -55,16 +55,13 @@ function ProjectCard({
   image,
   imageSrc,
   tags,
-  desktopHeight,
   index = 0,
-}: (typeof projects)[number] & { index?: number }) {
+}: ProjectData & { index?: number }) {
   const src = resolveImage({ title, image, imageSrc, tags }, index);
   return (
     <div className="flex w-full flex-col gap-[10px]">
-      {/* Image with tag overlay */}
-      <div
-        className={`relative h-[390px] w-full overflow-hidden lg:${desktopHeight}`}
-      >
+      {/* Image with tag overlay — mobile only (desktop uses inline layout) */}
+      <div className="relative h-[390px] w-full overflow-hidden">
         <Image src={src} alt={title} fill className="object-cover" />
         {/* Tags */}
         <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
