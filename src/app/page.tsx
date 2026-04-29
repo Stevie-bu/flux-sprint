@@ -1,9 +1,25 @@
+import Hero from "@/components/Hero";
+import Bio from "@/components/Bio";
+import About from "@/components/About";
+import PhotoBreak from "@/components/PhotoBreak";
+import Services from "@/components/Services";
+import Portfolio from "@/components/Portfolio";
+import Testimonials from "@/components/Testimonials";
+import News from "@/components/News";
+import Footer from "@/components/Footer";
+
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black">
-      <h1 className="text-5xl font-bold tracking-tight text-yellow-400 sm:text-7xl">
-        Flux Sprint 2026
-      </h1>
-    </div>
+    <>
+      <Hero />
+      <Bio />
+      <About />
+      <PhotoBreak />
+      <Services />
+      <Portfolio />
+      <Testimonials />
+      <News />
+      <Footer />
+    </>
   );
 }
