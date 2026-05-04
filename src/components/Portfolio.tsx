@@ -1,32 +1,29 @@
 import Image from "next/image";
 import CornerBrackets from "./CornerBrackets";
+import { urlFor } from "@/sanity/client";
+import StaggerFadeIn from "./StaggerFadeIn";
 
-const projects = [
-  {
-    title: "Surfers paradise",
-    image: "/project-1.png",
-    tags: ["Social Media", "Photography"],
-    desktopHeight: "h-[744px]",
-  },
-  {
-    title: "Cyberpunk caffe",
-    image: "/project-2.png",
-    tags: ["Social Media", "Photography"],
-    desktopHeight: "h-[699px]",
-  },
-  {
-    title: "Agency 976",
-    image: "/project-3.png",
-    tags: ["Social Media", "Photography"],
-    desktopHeight: "h-[699px]",
-  },
-  {
-    title: "Minimal Playground",
-    image: "/project-4.png",
-    tags: ["Social Media", "Photography"],
-    desktopHeight: "h-[744px]",
-  },
+export type ProjectData = {
+  _id?: string;
+  title: string;
+  image?: unknown;
+  imageSrc?: string;
+  tags?: string[];
+};
+
+const defaultProjects: ProjectData[] = [
+  { title: "Surfers paradise", imageSrc: "/project-1.png", tags: ["Social Media", "Photography"] },
+  { title: "Cyberpunk caffe", imageSrc: "/project-2.png", tags: ["Social Media", "Photography"] },
+  { title: "Agency 976", imageSrc: "/project-3.png", tags: ["Social Media", "Photography"] },
+  { title: "Minimal Playground", imageSrc: "/project-4.png", tags: ["Social Media", "Photography"] },
 ];
+
+function getProjectImageSrc(p: ProjectData, fallbackIndex: number): string {
+  if (p.image) return urlFor(p.image).width(1352).quality(80).url();
+  return p.imageSrc || `/project-${fallbackIndex + 1}.png`;
+}
+
+const projects = defaultProjects;
 
 function ArrowIcon() {
   return (
@@ -48,22 +45,28 @@ function ArrowIcon() {
   );
 }
 
+function resolveImage(p: ProjectData, fallbackIndex: number): string {
+  if (p.image && typeof p.image === "object") return urlFor(p.image).width(1352).quality(80).url();
+  if (p.imageSrc) return p.imageSrc;
+  return `/project-${fallbackIndex + 1}.png`;
+}
+
 function ProjectCard({
   title,
   image,
+  imageSrc,
   tags,
-  desktopHeight,
-}: (typeof projects)[number]) {
+  index = 0,
+}: ProjectData & { index?: number }) {
+  const src = resolveImage({ title, image, imageSrc, tags }, index);
   return (
     <div className="flex w-full flex-col gap-[10px]">
-      {/* Image with tag overlay */}
-      <div
-        className={`relative h-[390px] w-full overflow-hidden lg:${desktopHeight}`}
-      >
-        <Image src={image} alt={title} fill className="object-cover" />
+      {/* Image with tag overlay — mobile only (desktop uses inline layout) */}
+      <div className="relative h-[390px] w-full overflow-hidden">
+        <Image src={src} alt={title} fill className="object-cover" />
         {/* Tags */}
         <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
-          {tags.map((tag) => (
+          {(tags || []).map((tag) => (
             <span
               key={tag}
               className="rounded-[24px] bg-white/30 px-[8px] py-[4px] font-[family-name:var(--font-inter)] text-[14px] font-medium tracking-[-0.56px] text-[#111] backdrop-blur-[10px]"
@@ -84,7 +87,15 @@ function ProjectCard({
   );
 }
 
-export default function Portfolio() {
+type PortfolioProps = {
+  projects?: ProjectData[];
+  heading?: string;
+  ctaText?: string;
+  ctaButton?: string;
+};
+
+export default function Portfolio({ projects: cmsProjects, heading = "Selected\nWork", ctaText = "Discover how my creativity transforms ideas into impactful digital experiences — schedule a call with me to get started.", ctaButton = "Let's talk" }: PortfolioProps) {
+  const items = cmsProjects && cmsProjects.length > 0 ? cmsProjects : defaultProjects;
   return (
     <section className="w-full bg-white px-[16px] py-[48px] lg:px-[32px] lg:py-[80px]">
       <div className="flex flex-col gap-[32px] lg:gap-[61px]">
@@ -99,8 +110,9 @@ export default function Portfolio() {
 
             <div className="flex items-start gap-[10px]">
               <div className="font-[family-name:var(--font-inter)] text-[clamp(32px,6.67vw,96px)] font-light uppercase leading-[0.86] tracking-[-0.08em] text-black">
-                <p>Selected</p>
-                <p>Work</p>
+                {heading.split("\n").map((line, i) => (
+                  <p key={i}>{line}</p>
+                ))}
               </div>
               <p className="font-[family-name:var(--font-geist-mono)] text-[14px] font-normal leading-[1.1] text-[#1f1f1f]">
                 004
@@ -118,88 +130,45 @@ export default function Portfolio() {
 
         {/* Project grid */}
         {/* Mobile: single column, all stacked */}
+        <StaggerFadeIn>
         <div className="flex flex-col gap-[24px] lg:hidden">
-          {projects.map((project) => (
-            <ProjectCard key={project.title} {...project} />
+          {items.map((project, i) => (
+            <div key={project._id || project.title} data-stagger-item>
+              <ProjectCard {...project} index={i} />
+            </div>
           ))}
         </div>
+        </StaggerFadeIn>
 
         {/* Desktop: masonry 2-column layout */}
+        {items.length >= 4 && (
+        <StaggerFadeIn itemSelector="[data-stagger-item]" start="top 90%" end="bottom 20%">
         <div className="hidden gap-[24px] lg:flex lg:items-end">
           {/* Left column */}
           <div className="flex flex-1 flex-col justify-between self-stretch">
             <div className="flex flex-col gap-[10px]">
-              {/* Project 1 */}
-              <div className="flex w-full flex-col gap-[10px]">
-                <div className="relative h-[744px] w-full overflow-hidden">
-                  <Image
-                    src={projects[0].image}
-                    alt={projects[0].title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
-                    {projects[0].tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-[24px] bg-white/30 px-[8px] py-[4px] font-[family-name:var(--font-inter)] text-[14px] font-medium tracking-[-0.56px] text-[#111] backdrop-blur-[10px]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+              {[items[0], items[1]].map((p, i) => (
+                <div key={p._id || p.title} data-stagger-item className="flex w-full flex-col gap-[10px]">
+                  <div className={`relative w-full overflow-hidden ${i === 0 ? "h-[744px]" : "h-[699px]"}`}>
+                    <Image src={resolveImage(p, i)} alt={p.title} fill className="object-cover" />
+                    <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
+                      {(p.tags || []).map((tag) => (
+                        <span key={tag} className="rounded-[24px] bg-white/30 px-[8px] py-[4px] font-[family-name:var(--font-inter)] text-[14px] font-medium tracking-[-0.56px] text-[#111] backdrop-blur-[10px]">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex w-full items-center justify-between">
+                    <h3 className="font-[family-name:var(--font-inter)] text-[36px] font-black uppercase leading-[1.1] tracking-[-1.44px] text-black">{p.title}</h3>
+                    <ArrowIcon />
                   </div>
                 </div>
-                <div className="flex w-full items-center justify-between">
-                  <h3 className="font-[family-name:var(--font-inter)] text-[36px] font-black uppercase leading-[1.1] tracking-[-1.44px] text-black">
-                    {projects[0].title}
-                  </h3>
-                  <ArrowIcon />
-                </div>
-              </div>
-
-              {/* Project 2 */}
-              <div className="flex w-full flex-col gap-[10px]">
-                <div className="relative h-[699px] w-full overflow-hidden">
-                  <Image
-                    src={projects[1].image}
-                    alt={projects[1].title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
-                    {projects[1].tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-[24px] bg-white/30 px-[8px] py-[4px] font-[family-name:var(--font-inter)] text-[14px] font-medium tracking-[-0.56px] text-[#111] backdrop-blur-[10px]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex w-full items-center justify-between">
-                  <h3 className="font-[family-name:var(--font-inter)] text-[36px] font-black uppercase leading-[1.1] tracking-[-1.44px] text-black">
-                    {projects[1].title}
-                  </h3>
-                  <ArrowIcon />
-                </div>
-              </div>
+              ))}
             </div>
-
-            {/* CTA block */}
             <div className="w-[465px] pt-[24px]">
               <CornerBrackets>
                 <div className="flex flex-col gap-[10px]">
-                  <p className="font-[family-name:var(--font-inter)] text-[14px] italic leading-[1.3] tracking-[-0.56px] text-[#1f1f1f]">
-                    Discover how my creativity transforms ideas into impactful
-                    digital experiences — schedule a call with me to get started.
-                  </p>
-                  <a
-                    href="#contact"
-                    className="w-fit rounded-[24px] bg-black px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white"
-                  >
-                    Let&apos;s talk
-                  </a>
+                  <p className="font-[family-name:var(--font-inter)] text-[14px] italic leading-[1.3] tracking-[-0.56px] text-[#1f1f1f]">{ctaText}</p>
+                  <a href="#contact" className="w-fit rounded-[24px] bg-black px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white hover:animate-wiggle">{ctaButton}</a>
                 </div>
               </CornerBrackets>
             </div>
@@ -207,63 +176,26 @@ export default function Portfolio() {
 
           {/* Right column — offset from top */}
           <div className="flex flex-1 flex-col gap-[117px] pt-[240px]">
-            {/* Project 3 */}
-            <div className="flex w-full flex-col gap-[10px]">
-              <div className="relative h-[699px] w-full overflow-hidden">
-                <Image
-                  src={projects[2].image}
-                  alt={projects[2].title}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
-                  {projects[2].tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-[24px] bg-white/30 px-[8px] py-[4px] font-[family-name:var(--font-inter)] text-[14px] font-medium tracking-[-0.56px] text-[#111] backdrop-blur-[10px]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+            {[items[2], items[3]].map((p, i) => (
+              <div key={p._id || p.title} data-stagger-item className="flex w-full flex-col gap-[10px]">
+                <div className={`relative w-full overflow-hidden ${i === 0 ? "h-[699px]" : "h-[744px]"}`}>
+                  <Image src={resolveImage(p, i + 2)} alt={p.title} fill className="object-cover" />
+                  <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
+                    {(p.tags || []).map((tag) => (
+                      <span key={tag} className="rounded-[24px] bg-white/30 px-[8px] py-[4px] font-[family-name:var(--font-inter)] text-[14px] font-medium tracking-[-0.56px] text-[#111] backdrop-blur-[10px]">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex w-full items-center justify-between">
+                  <h3 className="font-[family-name:var(--font-inter)] text-[36px] font-black uppercase leading-[1.1] tracking-[-1.44px] text-black">{p.title}</h3>
+                  <ArrowIcon />
                 </div>
               </div>
-              <div className="flex w-full items-center justify-between">
-                <h3 className="font-[family-name:var(--font-inter)] text-[36px] font-black uppercase leading-[1.1] tracking-[-1.44px] text-black">
-                  {projects[2].title}
-                </h3>
-                <ArrowIcon />
-              </div>
-            </div>
-
-            {/* Project 4 */}
-            <div className="flex w-full flex-col gap-[10px]">
-              <div className="relative h-[744px] w-full overflow-hidden">
-                <Image
-                  src={projects[3].image}
-                  alt={projects[3].title}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
-                  {projects[3].tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-[24px] bg-white/30 px-[8px] py-[4px] font-[family-name:var(--font-inter)] text-[14px] font-medium tracking-[-0.56px] text-[#111] backdrop-blur-[10px]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="flex w-full items-center justify-between">
-                <h3 className="font-[family-name:var(--font-inter)] text-[36px] font-black uppercase leading-[1.1] tracking-[-1.44px] text-black">
-                  {projects[3].title}
-                </h3>
-                <ArrowIcon />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
+        </StaggerFadeIn>
+        )}
 
         {/* CTA block — mobile only */}
         <div className="lg:hidden">
@@ -275,9 +207,9 @@ export default function Portfolio() {
               </p>
               <a
                 href="#contact"
-                className="w-fit rounded-[24px] bg-black px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white"
+                className="w-fit rounded-[24px] bg-black px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white hover:animate-wiggle"
               >
-                Let&apos;s talk
+                {ctaButton}
               </a>
             </div>
           </CornerBrackets>

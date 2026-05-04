@@ -1,6 +1,26 @@
 /* eslint-disable @next/next/no-img-element */
 
-const testimonials = [
+import { urlFor } from "@/sanity/client";
+import TestimonialsParallax from "./TestimonialsParallax";
+
+export type TestimonialData = {
+  _id?: string;
+  author: string;
+  quote: string;
+  logo?: unknown;
+  logoSrc?: string;
+  order?: number;
+};
+
+const rotations = ["rotate(-6.85deg)", "rotate(2.9deg)", "rotate(2.23deg)", "rotate(-4.15deg)"];
+const positions = [
+  { left: "7.08%", top: "18%", z: "z-30" },
+  { left: "46.9%", top: "27.5%", z: "z-10" },
+  { left: "21.2%", top: "56%", z: "z-30" },
+  { left: "68.5%", top: "55.3%", z: "z-30" },
+];
+
+const defaultTestimonials = [
   {
     id: "marko",
     logo: "/logo-marko.svg",
@@ -77,7 +97,19 @@ function TestimonialCard({
   );
 }
 
-export default function Testimonials() {
+type TestimonialsProps = {
+  testimonials?: TestimonialData[];
+};
+
+export default function Testimonials({ testimonials: cmsTestimonials }: TestimonialsProps) {
+  const items = cmsTestimonials && cmsTestimonials.length > 0
+    ? cmsTestimonials.map((t, i) => ({
+        ...defaultTestimonials[i] || defaultTestimonials[0],
+        ...t,
+        id: t._id || `t-${i}`,
+        logo: t.logo ? urlFor(t.logo).width(300).url() : (t.logoSrc || defaultTestimonials[i]?.logo || "/logo-marko.svg"),
+      }))
+    : defaultTestimonials;
   return (
     <section className="w-full bg-white">
       {/* ===== Mobile layout ===== */}
@@ -86,11 +118,11 @@ export default function Testimonials() {
           Testimonials
         </h2>
         <div className="flex snap-x snap-mandatory gap-0 overflow-x-auto pb-[16px] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {testimonials.map((t) => (
+          {items.map((t, i) => (
             <div
               key={t.id}
               className="-mr-[10px] shrink-0 snap-start"
-              style={{ transform: t.rotation }}
+              style={{ transform: rotations[i % rotations.length] }}
             >
               <TestimonialCard
                 logo={t.logo}
@@ -105,29 +137,32 @@ export default function Testimonials() {
       </div>
 
       {/* ===== Desktop layout ===== */}
+      <TestimonialsParallax>
       <div
         className="relative hidden min-h-[987px] items-center justify-center lg:flex"
       >
         {/* Heading — z-20, between card layers */}
-        <h2 className="relative z-20 text-center font-[family-name:var(--font-inter)] text-[clamp(96px,13.75vw,198px)] font-medium capitalize leading-[1.1] tracking-[-0.07em] text-black">
+        <h2 data-testimonial-heading className="relative z-20 text-center font-[family-name:var(--font-inter)] text-[clamp(96px,13.75vw,198px)] font-medium capitalize leading-[1.1] tracking-[-0.07em] text-black">
           Testimonials
         </h2>
 
         {/* Cards — each with individual z-index */}
-        {testimonials.map((t) => (
+        {items.map((t, i) => (
           <div
             key={t.id}
-            className={`absolute ${t.z}`}
+            data-testimonial-card
+            className={`absolute ${positions[i % positions.length].z}`}
             style={{
-              left: t.left,
-              top: t.top,
-              transform: t.rotation,
+              left: positions[i % positions.length].left,
+              top: positions[i % positions.length].top,
+              transform: rotations[i % rotations.length],
             }}
           >
             <TestimonialCard logo={t.logo} quote={t.quote} author={t.author} />
           </div>
         ))}
       </div>
+      </TestimonialsParallax>
     </section>
   );
 }
