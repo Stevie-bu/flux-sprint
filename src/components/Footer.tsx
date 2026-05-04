@@ -37,7 +37,7 @@ export default function Footer({
   const socialsRight = socials.slice(mid);
 
   return (
-    <footer className="w-full overflow-hidden bg-black pt-[48px]">
+    <footer className="sticky bottom-0 z-0 w-full overflow-hidden bg-black pt-[48px]">
       <div className="flex flex-col gap-[24px] px-[16px] lg:gap-[48px] lg:px-[32px]">
         <div className="flex flex-col gap-[16px] lg:flex-row lg:items-start lg:justify-between lg:gap-0">
           <div className="flex w-[298px] flex-col gap-[12px]">
@@ -46,7 +46,7 @@ export default function Footer({
             </p>
             <a
               href="#contact"
-              className="w-fit rounded-[24px] border border-white px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white"
+              className="w-fit rounded-[24px] border border-white px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white hover:animate-wiggle"
             >
               {ctaText}
             </a>

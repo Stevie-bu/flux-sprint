@@ -1,5 +1,6 @@
 import Image from "next/image";
 import CornerBrackets from "./CornerBrackets";
+import ImageReveal from "./ImageReveal";
 import { urlFor } from "@/sanity/client";
 
 type AboutProps = {
@@ -38,12 +39,14 @@ export default function About({ aboutText, aboutImage }: AboutProps) {
               002
             </p>
             <div className="relative aspect-[422/594] w-full md:aspect-[436/614] md:w-[clamp(280px,30vw,436px)]">
-              <Image
-                src={portraitSrc}
-                alt="Portrait"
-                fill
-                className="object-cover"
-              />
+              <ImageReveal direction="bottom">
+                <Image
+                  src={portraitSrc}
+                  alt="Portrait"
+                  fill
+                  className="object-cover"
+                />
+              </ImageReveal>
             </div>
           </div>
         </div>

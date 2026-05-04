@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "studioName": "H.Studio",
+    "links": [
+      { "label": "About", "href": "#about" },
+      { "label": "Services", "href": "#services" },
+      { "label": "Projects", "href": "#projects" },
+      { "label": "News", "href": "#news" },
+      { "label": "Contact", "href": "#contact" }
+    ],
+    "cta": "Let's talk"
+  },
+  "hero": {
+    "greeting": "Hello i'm"
+  },
+  "bio": {
+    "experienceLabel": "8+ years in industry",
+    "tagLabel": "creative freelancer"
+  },
+  "about": {
+    "label": "About"
+  },
+  "services": {
+    "label": "services",
+    "heading": "Deliverables"
+  },
+  "portfolio": {
+    "label": "portfolio",
+    "heading": "Selected\nWork",
+    "cta": "Discover how my creativity transforms ideas into impactful digital experiences — schedule a call with me to get started.",
+    "number": "004"
+  },
+  "testimonials": {
+    "heading": "Testimonials"
+  },
+  "news": {
+    "heading": "Keep up with my latest news & achievements",
+    "readMore": "Read more"
+  },
+  "footer": {
+    "cta": "Have a project in mind?",
+    "credit": "Coded By Claude",
+    "legal": [
+      { "label": "licences", "href": "#" },
+      { "label": "Privacy policy", "href": "#" }
+    ]
+  }
+}

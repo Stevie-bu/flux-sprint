@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
+import ServiceReveal from "./ServiceReveal";
 
 type ServiceData = {
   _id?: string;
@@ -19,27 +20,29 @@ const defaultServices: ServiceData[] = [
 
 function ServiceItem({ number, title, description, imageSrc }: { number: number; title: string; description: string; imageSrc: string }) {
   return (
-    <div className="flex w-full flex-col gap-[9px]">
+    <ServiceReveal>
       <div className="flex w-full flex-col gap-[9px]">
-        <p className="font-[family-name:var(--font-geist-mono)] text-[14px] font-normal uppercase leading-[1.1] text-white">
-          [ {number} ]
-        </p>
-        <hr className="w-full border-t border-white/30" />
-      </div>
-      <div className="flex flex-col gap-[16px] lg:flex-row lg:items-start lg:justify-between lg:gap-[9px]">
-        <h3 className="shrink-0 whitespace-nowrap font-[family-name:var(--font-inter)] text-[36px] font-bold italic uppercase leading-[1.1] tracking-[-1.44px] text-white">
-          {title}
-        </h3>
-        <div className="flex shrink-0 flex-col gap-[16px] lg:flex-row lg:gap-[24px]">
-          <p className="font-[family-name:var(--font-inter)] text-[14px] font-normal leading-[1.3] tracking-[-0.56px] text-white lg:w-[393px]">
-            {description}
+        <div className="flex w-full flex-col gap-[9px]">
+          <p className="font-[family-name:var(--font-geist-mono)] text-[14px] font-normal uppercase leading-[1.1] text-white">
+            [ {number} ]
           </p>
-          <div className="relative size-[151px] shrink-0 overflow-hidden">
-            <Image src={imageSrc} alt={title} fill className="object-cover" />
+          <hr data-service-line className="w-full border-t border-white/30" />
+        </div>
+        <div className="flex flex-col gap-[16px] lg:flex-row lg:items-start lg:justify-between lg:gap-[9px]">
+          <h3 data-service-title className="shrink-0 whitespace-nowrap font-[family-name:var(--font-inter)] text-[36px] font-bold italic uppercase leading-[1.1] tracking-[-1.44px] text-white">
+            {title}
+          </h3>
+          <div className="flex shrink-0 flex-col gap-[16px] lg:flex-row lg:gap-[24px]">
+            <p data-service-desc className="font-[family-name:var(--font-inter)] text-[14px] font-normal leading-[1.3] tracking-[-0.56px] text-white lg:w-[393px]">
+              {description}
+            </p>
+            <div data-service-thumb className="relative size-[151px] shrink-0 overflow-hidden">
+              <Image src={imageSrc} alt={title || "Service"} fill className="object-cover" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ServiceReveal>
   );
 }
 

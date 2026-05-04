@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "studioName": "H.Studio",
+    "links": [
+      { "label": "Über uns", "href": "#about" },
+      { "label": "Leistungen", "href": "#services" },
+      { "label": "Projekte", "href": "#projects" },
+      { "label": "News", "href": "#news" },
+      { "label": "Kontakt", "href": "#contact" }
+    ],
+    "cta": "Kontakt"
+  },
+  "hero": {
+    "greeting": "Hallo, ich bin"
+  },
+  "bio": {
+    "experienceLabel": "8+ Jahre Erfahrung",
+    "tagLabel": "Kreativer Freelancer"
+  },
+  "about": {
+    "label": "Über uns"
+  },
+  "services": {
+    "label": "Leistungen",
+    "heading": "Angebot"
+  },
+  "portfolio": {
+    "label": "Portfolio",
+    "heading": "Ausgewählte\nArbeiten",
+    "cta": "Erfahre, wie meine Kreativität Ideen in wirkungsvolle digitale Erlebnisse verwandelt — vereinbare einen Termin mit mir.",
+    "number": "004"
+  },
+  "testimonials": {
+    "heading": "Referenzen"
+  },
+  "news": {
+    "heading": "Bleib auf dem Laufenden über meine neusten News & Erfolge",
+    "readMore": "Weiterlesen"
+  },
+  "footer": {
+    "cta": "Projekt im Kopf?",
+    "credit": "Coded By Claude",
+    "legal": [
+      { "label": "Lizenzen", "href": "#" },
+      { "label": "Datenschutz", "href": "#" }
+    ]
+  }
+}

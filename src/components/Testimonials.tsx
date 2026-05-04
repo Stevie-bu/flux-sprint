@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { urlFor } from "@/sanity/client";
+import TestimonialsParallax from "./TestimonialsParallax";
 
 export type TestimonialData = {
   _id?: string;
@@ -136,11 +137,12 @@ export default function Testimonials({ testimonials: cmsTestimonials }: Testimon
       </div>
 
       {/* ===== Desktop layout ===== */}
+      <TestimonialsParallax>
       <div
         className="relative hidden min-h-[987px] items-center justify-center lg:flex"
       >
         {/* Heading — z-20, between card layers */}
-        <h2 className="relative z-20 text-center font-[family-name:var(--font-inter)] text-[clamp(96px,13.75vw,198px)] font-medium capitalize leading-[1.1] tracking-[-0.07em] text-black">
+        <h2 data-testimonial-heading className="relative z-20 text-center font-[family-name:var(--font-inter)] text-[clamp(96px,13.75vw,198px)] font-medium capitalize leading-[1.1] tracking-[-0.07em] text-black">
           Testimonials
         </h2>
 
@@ -148,6 +150,7 @@ export default function Testimonials({ testimonials: cmsTestimonials }: Testimon
         {items.map((t, i) => (
           <div
             key={t.id}
+            data-testimonial-card
             className={`absolute ${positions[i % positions.length].z}`}
             style={{
               left: positions[i % positions.length].left,
@@ -159,6 +162,7 @@ export default function Testimonials({ testimonials: cmsTestimonials }: Testimon
           </div>
         ))}
       </div>
+      </TestimonialsParallax>
     </section>
   );
 }

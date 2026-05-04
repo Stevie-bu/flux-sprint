@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
+import NewsReveal from "./NewsReveal";
 
 export type ArticleData = {
   _id?: string;
@@ -108,6 +109,7 @@ export default function News({ articles: cmsArticles, heading = "Keep up with my
       </div>
 
       {/* ===== Desktop ===== */}
+      <NewsReveal>
       <div className="hidden px-[32px] py-[120px] lg:block">
         <div className="flex items-end justify-between">
           {/* Rotated heading on the left — sticks to left */}
@@ -122,18 +124,20 @@ export default function News({ articles: cmsArticles, heading = "Keep up with my
           {/* Scrollable cards strip — sticks to right */}
           <div className="flex max-w-[1020px] items-start overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {articles.map((a, i) => (
+              <div key={i} data-news-card>
               <NewsCard
-                key={i}
                 image={a.image ? urlFor(a.image).width(706).quality(80).url() : (a.imageSrc || `/news-${i + 1}.png`)}
                 text={a.excerpt || ""}
                 offset={i % 2 === 1}
                 isLast={i === articles.length - 1}
                 readMoreLabel={readMoreText}
               />
+              </div>
             ))}
           </div>
         </div>
       </div>
+      </NewsReveal>
     </section>
   );
 }

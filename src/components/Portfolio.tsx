@@ -1,6 +1,7 @@
 import Image from "next/image";
 import CornerBrackets from "./CornerBrackets";
 import { urlFor } from "@/sanity/client";
+import StaggerFadeIn from "./StaggerFadeIn";
 
 export type ProjectData = {
   _id?: string;
@@ -129,20 +130,25 @@ export default function Portfolio({ projects: cmsProjects, heading = "Selected\n
 
         {/* Project grid */}
         {/* Mobile: single column, all stacked */}
+        <StaggerFadeIn>
         <div className="flex flex-col gap-[24px] lg:hidden">
           {items.map((project, i) => (
-            <ProjectCard key={project._id || project.title} {...project} index={i} />
+            <div key={project._id || project.title} data-stagger-item>
+              <ProjectCard {...project} index={i} />
+            </div>
           ))}
         </div>
+        </StaggerFadeIn>
 
         {/* Desktop: masonry 2-column layout */}
         {items.length >= 4 && (
+        <StaggerFadeIn itemSelector="[data-stagger-item]" start="top 90%" end="bottom 20%">
         <div className="hidden gap-[24px] lg:flex lg:items-end">
           {/* Left column */}
           <div className="flex flex-1 flex-col justify-between self-stretch">
             <div className="flex flex-col gap-[10px]">
               {[items[0], items[1]].map((p, i) => (
-                <div key={p._id || p.title} className="flex w-full flex-col gap-[10px]">
+                <div key={p._id || p.title} data-stagger-item className="flex w-full flex-col gap-[10px]">
                   <div className={`relative w-full overflow-hidden ${i === 0 ? "h-[744px]" : "h-[699px]"}`}>
                     <Image src={resolveImage(p, i)} alt={p.title} fill className="object-cover" />
                     <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
@@ -162,7 +168,7 @@ export default function Portfolio({ projects: cmsProjects, heading = "Selected\n
               <CornerBrackets>
                 <div className="flex flex-col gap-[10px]">
                   <p className="font-[family-name:var(--font-inter)] text-[14px] italic leading-[1.3] tracking-[-0.56px] text-[#1f1f1f]">{ctaText}</p>
-                  <a href="#contact" className="w-fit rounded-[24px] bg-black px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white">{ctaButton}</a>
+                  <a href="#contact" className="w-fit rounded-[24px] bg-black px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white hover:animate-wiggle">{ctaButton}</a>
                 </div>
               </CornerBrackets>
             </div>
@@ -171,7 +177,7 @@ export default function Portfolio({ projects: cmsProjects, heading = "Selected\n
           {/* Right column — offset from top */}
           <div className="flex flex-1 flex-col gap-[117px] pt-[240px]">
             {[items[2], items[3]].map((p, i) => (
-              <div key={p._id || p.title} className="flex w-full flex-col gap-[10px]">
+              <div key={p._id || p.title} data-stagger-item className="flex w-full flex-col gap-[10px]">
                 <div className={`relative w-full overflow-hidden ${i === 0 ? "h-[699px]" : "h-[744px]"}`}>
                   <Image src={resolveImage(p, i + 2)} alt={p.title} fill className="object-cover" />
                   <div className="absolute bottom-[16px] left-[16px] flex gap-[12px]">
@@ -188,6 +194,7 @@ export default function Portfolio({ projects: cmsProjects, heading = "Selected\n
             ))}
           </div>
         </div>
+        </StaggerFadeIn>
         )}
 
         {/* CTA block — mobile only */}
@@ -200,7 +207,7 @@ export default function Portfolio({ projects: cmsProjects, heading = "Selected\n
               </p>
               <a
                 href="#contact"
-                className="w-fit rounded-[24px] bg-black px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white"
+                className="w-fit rounded-[24px] bg-black px-[16px] py-[12px] font-[family-name:var(--font-inter)] text-[14px] font-medium leading-normal tracking-[-0.56px] text-white hover:animate-wiggle"
               >
                 {ctaButton}
               </a>

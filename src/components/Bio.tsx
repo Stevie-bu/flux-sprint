@@ -1,3 +1,5 @@
+import ScrollTextFill from "./ScrollTextFill";
+
 type BioLine = { text: string; indent: number; _key?: string };
 
 type BioProps = {
@@ -35,6 +37,7 @@ export default function Bio({
         </div>
 
         {/* Typography block */}
+        <ScrollTextFill fromColor="#cccccc" toColor="#000000" start="top 85%" end="bottom 30%">
         <div className="flex flex-col items-center gap-[8px] uppercase md:items-start">
           {bioLines.map((line, i) => {
             const isFirst = i === 0;
@@ -44,12 +47,13 @@ export default function Bio({
               return (
                 <div
                   key={line._key || i}
+                  data-line
                   className="flex flex-col items-center gap-[12px] md:w-full md:flex-row md:items-start md:gap-[12px]"
                 >
-                  <p className="font-[family-name:var(--font-geist-mono)] text-[14px] font-normal leading-[1.1] text-[#1f1f1f] md:order-2">
+                  <p className="font-[family-name:var(--font-geist-mono)] text-[14px] font-normal leading-[1.1] md:order-2">
                     {number}
                   </p>
-                  <p className="whitespace-pre font-[family-name:var(--font-inter)] text-[clamp(32px,6.67vw,96px)] font-light leading-[0.84] tracking-[-0.08em] text-black md:order-1">
+                  <p className="whitespace-pre font-[family-name:var(--font-inter)] text-[clamp(32px,6.67vw,96px)] font-light leading-[0.84] tracking-[-0.08em] md:order-1">
                     {line.text}
                   </p>
                 </div>
@@ -60,15 +64,16 @@ export default function Bio({
               return (
                 <div
                   key={line._key || i}
+                  data-line
                   className="flex flex-col items-center gap-[12px] md:w-full md:flex-row md:flex-wrap md:items-baseline md:gap-x-[32px] md:gap-y-[12px]"
                   style={{ paddingLeft: `${line.indent}%` }}
                 >
-                  <p className="whitespace-nowrap font-[family-name:var(--font-inter)] text-[clamp(32px,6.67vw,96px)] font-light leading-[0.84] tracking-[-0.08em] text-black md:pl-0"
+                  <p className="whitespace-nowrap font-[family-name:var(--font-inter)] text-[clamp(32px,6.67vw,96px)] font-light leading-[0.84] tracking-[-0.08em] md:pl-0"
                     style={{ paddingLeft: 0 }}
                   >
                     {line.text}
                   </p>
-                  <p className="whitespace-nowrap font-[family-name:var(--font-geist-mono)] text-[14px] font-normal leading-[1.1] text-[#1f1f1f] md:ml-auto">
+                  <p className="whitespace-nowrap font-[family-name:var(--font-geist-mono)] text-[14px] font-normal leading-[1.1] md:ml-auto">
                     [ {tagLabel} ]
                   </p>
                 </div>
@@ -76,19 +81,21 @@ export default function Bio({
             }
 
             // Check if line contains "&" for Playfair styling
-            const hasAmpersand = line.text.includes("&");
+            const lineText = line.text || "";
+            const hasAmpersand = lineText.includes("&");
 
             return (
               <div
                 key={line._key || i}
+                data-line
                 className="flex w-full items-center justify-center md:justify-start"
                 style={{ paddingLeft: `${line.indent}%` }}
               >
-                <p className="whitespace-nowrap font-[family-name:var(--font-inter)] text-[clamp(32px,6.67vw,96px)] font-light leading-[0.84] tracking-[-0.08em] text-black md:pl-0"
+                <p className="whitespace-nowrap font-[family-name:var(--font-inter)] text-[clamp(32px,6.67vw,96px)] font-light leading-[0.84] tracking-[-0.08em] md:pl-0"
                   style={{ paddingLeft: 0 }}
                 >
                   {hasAmpersand
-                    ? line.text.split("&").map((part, j) =>
+                    ? lineText.split("&").map((part, j) =>
                         j === 0 ? (
                           <span key={j}>{part}</span>
                         ) : (
@@ -100,12 +107,13 @@ export default function Bio({
                           </span>
                         )
                       )
-                    : line.text}
+                    : lineText}
                 </p>
               </div>
             );
           })}
         </div>
+        </ScrollTextFill>
       </div>
     </section>
   );

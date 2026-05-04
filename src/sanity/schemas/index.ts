@@ -5,6 +5,7 @@ import project from "./project";
 import testimonial from "./testimonial";
 import article from "./article";
 import siteSettings from "./siteSettings";
+import aboutPage from "./aboutPage";
 
 export const schemaTypes = [
   hero,
@@ -14,4 +15,5 @@ export const schemaTypes = [
   testimonial,
   article,
   siteSettings,
+  aboutPage,
 ];

@@ -5,33 +5,10 @@ export default defineType({
   title: "Service",
   type: "document",
   fields: [
-    defineField({
-      name: "title",
-      title: "Title",
-      type: "string",
-    }),
-    defineField({
-      name: "description",
-      title: "Description",
-      type: "text",
-    }),
-    defineField({
-      name: "thumbnail",
-      title: "Thumbnail",
-      type: "image",
-      options: { hotspot: true },
-    }),
-    defineField({
-      name: "order",
-      title: "Order",
-      type: "number",
-    }),
+    defineField({ name: "title", title: "Title", type: "internationalizedArrayString" }),
+    defineField({ name: "description", title: "Description", type: "internationalizedArrayText" }),
+    defineField({ name: "thumbnail", title: "Thumbnail", type: "image", options: { hotspot: true } }),
+    defineField({ name: "order", title: "Order", type: "number" }),
   ],
-  orderings: [
-    {
-      title: "Order",
-      name: "orderAsc",
-      by: [{ field: "order", direction: "asc" }],
-    },
-  ],
+  orderings: [{ title: "Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] }],
 });
